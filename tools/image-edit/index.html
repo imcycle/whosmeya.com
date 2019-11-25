@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>图片加文字</title>
+  <style>
+    .item {
+      margin-bottom: 10px;
+    }
+
+    .item span {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+    }
+
+    .item input {
+      display: inline-block !important;
+    }
+
+    .dragBox {
+      display: inline-block;
+      position: relative;
+      margin-left: 20px;
+    }
+
+    .image {
+      border: 1px dotted #ccc;
+    }
+
+    #imgTxt {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 20px;
+      line-height: 20px;
+      font-family: Arial;
+      /* opacity: 0; */
+    }
+
+
+    #myBox {
+      display: inline-block;
+    }
+
+    #myCanvas {
+      border: 1px dotted #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <input id="fileIpt" type="file" accept="image/*" mutiple="mutiple" />
+
+    <h3>类型</h3>
+    <div id="type">
+      <label><input id="sdf" type="radio" name="type" value="RECTANGLE" />插入矩形</label>
+      <label><input type="radio" name="type" value="DRAW" />插入画笔</label>
+      <label><input type="radio" name="type" value="FONT" />插入文字</label>
+    </div>
+
+    <h3>字体大小</h3>
+    <div id="fontsize">
+      <label><input type="radio" name="fontsize" value="22" />22</label>
+      <label><input type="radio" name="fontsize" value="18" />18</label>
+      <label><input type="radio" name="fontsize" value="14" />14</label>
+    </div>
+
+    <h3>颜色</h3>
+    <div id="color">
+      <label style="color: #ff0000;"><input type="radio" name="color" value="ff0000" />#ff0000</label>
+      <label style="color: #0000ff;"><input type="radio" name="color" value="0000ff" />#0000ff</label>
+      <label style="color: #00ff00;"><input type="radio" name="color" value="00ff00" />#00ff00</label>
+      <label style="color: #000000;"><input type="radio" name="color" value="000000" />#000000</label>
+      <label style="color: #ffffff;"><input type="radio" name="color" value="ffffff" />#ffffff</label>
+    </div>
+
+
+
+    <div class="dragBox">
+      <img id="img" class="image" />
+      <span id="imgTxt"></span>
+    </div>
+
+    <div id="myBox">
+      <canvas id="myCanvas"></canvas>
+    </div>
+  </div>
+  <script>
+    var stack = []; // 
+
+    var type,
+      fontsize = '14',
+      color = 'ff0000';
+
+    var c = document.getElementById('myCanvas');
+    var ctx = c.getContext('2d');
+
+
+    // 选择
+    document.getElementById('type').addEventListener('click', function (e) {
+      if (e.target.tagName === 'INPUT') {
+        type = e.target.value;
+      }
+    })
+    document.getElementById('fontsize').addEventListener('click', function (e) {
+      if (e.target.tagName === 'INPUT') {
+        fontsize = e.target.value;
+      }
+    })
+    document.getElementById('color').addEventListener('click', function (e) {
+      if (e.target.tagName === 'INPUT') {
+        color = e.target.value;
+      }
+    })
+
+    // 导入img
+    var originalImg = new Image();
+    originalImg.onload = function (e) {
+      c.width = e.target.width;
+      c.height = e.target.height;
+      ctx.drawImage(e.target, 0, 0, e.target.width, e.target.height);
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      originalImg.src = e.target.result;
+    }
+    document.getElementById('fileIpt').onchange = function (e) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+
+    // 写字
+    // var myBox = document.getElementById('myBox');
+    // myBox.addEventListener('mouse', function () {
+    //   console.log(1)
+    // })
+
+    // pc端
+    c.onmousedown = function (e) {
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+      c.onmousemove = function (e) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      }
+    }
+    c.onmouseup = function (e) {
+      c.onmousemove = null;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+    }
+    // 移动端
+    // document.body.addEventListener('touchmove', function (e) { e.preventDefault() }, { passive: false }); //passive 参数不能省略，用来兼容ios和android
+    c.ontouchstart = function (e) {
+      console.log(1)
+      ctx.beginPath();
+      ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+      c.ontouchmove = function (e) {
+        console.log(2)
+
+        ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }
+    c.ontouchend = function (e) {
+      c.ontouchmove = null;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+    }
+
+
+
+
+
+
+
+
+
+    // function draw() {
+    //   // 清空
+    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //   // 画
+    //   ctx.drawImage(uploadImg, 0, 0, canvas.width, canvas.height);
+    //   // 写字
+    //   ctx.fillStyle = color;
+    //   ctx.font = fsz + "px Arial";
+    //   ctx.textAlign = "left";
+    //   ctx.textBaseline = "top";
+    //   ctx.fillText(txt, x, y);
+    //   // 导出
+    //   img.src = canvas.toDataURL('image/png');
+    // }
+  </script>
+</body>
+
+</html>
