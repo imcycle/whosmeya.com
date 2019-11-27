@@ -16,11 +16,11 @@
       padding: 20px;
     }
 
-    .tab {
+    #tab {
       overflow: hidden;
     }
 
-    .tab div {
+    #tab div {
       float: left;
       height: 26px;
       line-height: 26px;
@@ -30,12 +30,12 @@
       border: 1px solid #d9d9d9;
     }
 
-    .tab .tab-checked {
+    #tab .tab-checked {
       color: #108ee9;
       border-color: #108ee9;
     }
 
-    .fontBox {
+    #fontBox {
       display: inline-block;
       background: #4e4e4e;
       padding: 10px;
@@ -112,6 +112,10 @@
       position: absolute;
       padding: 0 6px;
     }
+
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 
@@ -121,19 +125,18 @@
     <br />
     <div id="myBox">
       <canvas id="myCanvas"></canvas>
-      <!-- <input class="pureInput" style="position: absolute; left: 20px; top: 20px;" value="123"> -->
     </div>
 
-    <div class="tab">
-      <div>插入矩形</div>
-      <div class="tab-checked">插入画笔</div>
-      <div>插入文字</div>
+    <div id="tab">
+      <div type="RECTANGLE">插入矩形</div>
+      <div type="DRAW">插入画笔</div>
+      <div type="WORD">插入文字</div>
     </div>
-    <div class="fontBox">
+    <div id="fontBox" class="hidden">
       <select id="fontSize">
-        <option>大</option>
-        <option>中</option>
-        <option>小</option>
+        <option value="14px">小</option>
+        <option value="20px">中</option>
+        <option value="26px">大</option>
       </select>
       <div id="lineWidth">
         <div style="padding: 0px;" lineWidth="2" class="lineWidth-checked"></div>
@@ -172,12 +175,36 @@
       lineWidth = '2',
       color = '#ff0000';
 
+    var myBox = document.getElementById('myBox'),
+      fontBox = document.getElementById('fontBox'),  // 
+      tabBox = document.getElementById('tab'),  // 类型选择
+      fontSizeBox = document.getElementById('fontSize'),  // 字体选择框
+      lineWidthBox = document.getElementById('lineWidth'),  // 线宽选择框
+      colorBox = document.getElementById('color');   // 颜色选择框
     var c = document.getElementById('myCanvas');
     var ctx = c.getContext('2d');
 
+    // 改变tab
+    var tabs = tabBox.getElementsByTagName('div');
+    Array.prototype.forEach.call(tabs, event => {
+      event.onclick = function () {
+        console.log(1)
+        type = event.getAttribute('type');  // 设置全局type
+        Array.prototype.forEach.call(tabs, d => d.classList.remove('tab-checked'));  // 删除class
+        event.classList.add('tab-checked');  // 添加class
 
-    // lineWidth
-    var lineWidthNodeList = document.getElementById('lineWidth').getElementsByTagName('div');
+        fontBoxChange(type);  // fontbox样式
+        myBoxChange(type);  // 根据类型添加或删除mybox的事件
+      }
+    })
+
+    // 改变字体大小
+    fontSizeBox.onchange = (e) => {
+      fontSize = e.target.value;
+    }
+
+    // 改变lineWidth
+    var lineWidthNodeList = lineWidthBox.getElementsByTagName('div');
     Array.prototype.forEach.call(lineWidthNodeList, event => {
       event.onclick = function () {
         lineWidth = event.getAttribute('lineWidth');  // 设置全局lineWidth
@@ -186,8 +213,8 @@
       }
     })
 
-    // 颜色
-    var colorNodeList = document.getElementById('color').getElementsByTagName('div');
+    // 改变颜色
+    var colorNodeList = colorBox.getElementsByTagName('div');
     for (let i = 0, colorNode; colorNode = colorNodeList[i++];) {
       colorNode.onclick = function () {
         color = colorNode.getAttribute('color');  // 设置全局color
@@ -211,30 +238,41 @@
       reader.readAsDataURL(e.target.files[0]);
     }
 
-    // 写字
-    // var myBox = document.getElementById('myBox');
-    // myBox.addEventListener('mouse', function () {
-    //   console.log(1)
-    // })
 
+    /**
+     * 插入画笔
+     */
     // pc端
-    c.onmousedown = function (e) {
+    function openDrawType() {
+      c.addEventListener('mousedown', handleDrawMouseDown);
+      c.addEventListener('mouseout', handleDrawMouseOut);
+      c.addEventListener('mouseup', handleDrawMouseUp);
+    }
+    function closeDrawType() {
+      c.removeEventListener('mousedown', handleDrawMouseDown);
+      c.removeEventListener('mouseout', handleDrawMouseOut);
+      c.removeEventListener('mouseup', handleDrawMouseUp);
+    }
+    function handleDrawMouseDown(e) {
       ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
       ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
-      c.onmousemove = function (e) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.offsetX, e.offsetY);
-      }
+      c.addEventListener('mousemove', handleDrawMouseMove);
     }
-    c.onmouseup = function (e) {
-      c.onmousemove = null;
+    function handleDrawMouseOut(e) {
+      c.removeEventListener('mousemove', handleDrawMouseMove);
+      ctx.closePath();
+    }
+    function handleDrawMouseUp(e) {
+      c.removeEventListener('mousemove', handleDrawMouseMove);
+      ctx.closePath();
+    }
+    function handleDrawMouseMove(e) {
       ctx.lineTo(e.offsetX, e.offsetY);
       ctx.stroke();
     }
+
     // 移动端
     // document.body.addEventListener('touchmove', function (e) { e.preventDefault() }, { passive: false }); //passive 参数不能省略，用来兼容ios和android
     // c.ontouchstart = function (e) {
@@ -257,29 +295,104 @@
     // }
 
 
+    /**
+     * 插入文字
+     */
+    var txtDataList = [];  // 记录input信息  位置颜色等, 用于最终绘制
+    function openWordType() {
+      myBox.addEventListener('click', handleAddWord);
+    }
+    function closeWordType() {
+      myBox.removeEventListener('click', handleAddWord);
+    }
+    function handleAddWord(e) {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.target.tagName === 'CANVAS') {  // 新增input
+        var ipt = document.createElement('input');
+        ipt.setAttribute('class', 'pureInput');
+        var left = e.offsetX - 6;
+        var top = e.offsetY - 6;
+        ipt.style.left = left - 6 + 'px';
+        ipt.style.top = top - 6 + 'px';
+        ipt.style.fontSize = fontSize;
+        ipt.style.color = color;
+        myBox.appendChild(ipt);
+        ipt.focus();
 
-    // var myBox = document.getElementById('myBox');
-    // myBox.addEventListener('click', function (e) {
-    //   if (e.target.tagName === 'INPUT') return;
-    //   if (e.target.tagName === 'CANVAS') {  // 新增input
-    //     var ipt = document.createElement('input');
-    //     ipt.setAttribute('class', 'pureInput');
-    //     ipt.style.left = e.offsetX - 6 + 'px';
-    //     ipt.style.top = e.offsetY - 6 + 'px';
-    //     myBox.appendChild(ipt);
-    //     ipt.focus();
-    //   };
-    // })
+        txtDataList.push({  // 新增
+          ipt,
+          left,
+          top,
+          fontSize,
+          color,
+        })
+
+        ipt.onmousedown = function (e) {
+          var offsetLeft = myBox.offsetLeft;
+          var offsetTop = myBox.offsetTop;
+          var offsetX = e.offsetX;
+          var offsetY = e.offsetY;
+          var txtData = txtDataList.find(d => d.ipt === ipt);
+          ipt.onmousemove = function (e) {
+            var left = e.clientX - offsetLeft - offsetX;
+            var top = e.clientY - offsetTop - offsetY;
+            txtData.left = left; // 更新input信息
+            txtData.top = top; // 更新input信息
+            ipt.style.left = left + 'px';
+            ipt.style.top = top + 'px';
+          }
+        }
+        ipt.onmouseout = function (e) {
+          ipt.onmousemove = null;
+        }
+        ipt.onmouseup = function (e) {
+          ipt.onmousemove = null;
+        }
+        ipt.onblur = function () {
+          if (!ipt.value) {
+            // 删除txtlist
+            var index = txtDataList.findIndex(d => d.ipt === ipt);
+            if (~index) {
+              txtDataList.splice(index, 1)
+            }
+            // 删除dom
+            myBox.removeChild(ipt);
+          }
+        }
+      };
+    }
 
 
-    // function a(left, top, ) {
-    //   var ipt = document.createElement('input');
-    //   ipt.setAttribute('class', 'pureInput');
-    //   ipt.style.left = left - 6 + 'px';
-    //   ipt.style.top = right - 6 + 'px';
-    //   myBox.appendChild(ipt);
-    //   ipt.focus();
-    // }
+
+    /**
+     * myBox
+     */
+    function myBoxChange(type) {
+      [closeDrawType, closeWordType,].forEach(d => d());  // 关闭事件
+      if (type === 'RECTANGLE') {     // 打开类型点击事件
+
+      } else if (type === 'DRAW') {
+        openDrawType();
+      } else if (type === 'WORD') {
+        openWordType();
+      }
+    }
+    /**
+     * fontBox
+     */
+    function fontBoxChange(type) {
+      fontBox.classList.remove('hidden');
+      if (type === 'RECTANGLE') {
+        fontSizeBox.classList.add('hidden');
+        lineWidthBox.classList.add('hidden');
+      } else if (type === 'DRAW') {
+        fontSizeBox.classList.add('hidden');
+        lineWidthBox.classList.remove('hidden');
+      } else if (type === 'WORD') {
+        fontSizeBox.classList.remove('hidden');
+        lineWidthBox.classList.add('hidden');
+      }
+    }
 
 
     // function draw() {
@@ -299,7 +412,20 @@
 
     // 导出为图片
     document.getElementById('exportBtn').addEventListener('click', function () {
-      document.getElementById('myImg').src = c.toDataURL('image/png');
+      var cc = document.createElement('canvas');
+      var cctx = cc.getContext('2d');
+      cc.width = c.width;
+      cc.height = c.height;
+      cctx.drawImage(c, 0, 0, cc.width, cc.height);
+      txtDataList.forEach(d => {
+        cctx.font = d.fontSize + ' Arial';
+        cctx.fillStyle = d.color;
+        cctx.textAlign = "left";
+        cctx.textBaseline = "top";
+        cctx.fillText(d.ipt.value, d.left, d.top);
+      })
+
+      document.getElementById('myImg').src = cc.toDataURL('image/png');
     })
 
   </script>
