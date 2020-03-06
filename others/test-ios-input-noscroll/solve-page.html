@@ -35,6 +35,8 @@
 </body>
 <script>
   function iptBlur() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     setTimeout(function () {
       root.scrollTop = 1;
     }, 2000)
