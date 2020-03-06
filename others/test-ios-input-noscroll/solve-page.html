@@ -29,8 +29,13 @@
     <div style="height: 10vh;"></div>
     <input />
     <div style="height: 60vh;"></div>
-    <input onblur="document.body.scrollTop = 1;" />
+    <input onblur="iptBlur()" />
   </div>
 </body>
+<script>
+  function iptBlur() {
+    document.body.scrollTop = 1;
+  }
+</script>
 
 </html>
