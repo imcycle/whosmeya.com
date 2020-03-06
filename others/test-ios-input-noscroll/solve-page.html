@@ -35,11 +35,21 @@
 </body>
 <script>
   function iptBlur() {
-    // document.body.scrollTop = 0;
-    // document.documentElement.scrollTop = 0;
-    // setTimeout(function () {
-    //   root.scrollTop = 1;
-    // }, 2000)
+    if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+      // $alert('ios端');
+      let currentPosition, timer;
+      let speed = 1;
+      timer = setInterval(function () {
+        currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
+        currentPosition -= speed;
+        window.scrollTo(0, currentPosition); // 页面向上滚动
+        currentPosition += speed;
+        window.scrollTo(0, currentPosition); // 页面向下滚动
+        clearInterval(timer);
+      }, 100);
+    } else if (ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1) {
+      // alert('android端');
+    }
   }
 </script>
 
