@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>页面内不回弹</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body,
+    #root {
+      height: 100%;
+    }
+
+    #root {
+      overflow: auto;
+      background: pink;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <div style="height: 70wh;"></div>
+    <input />
+  </div>
+</body>
+
+</html>
