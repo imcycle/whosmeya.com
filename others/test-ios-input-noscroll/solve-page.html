@@ -35,21 +35,15 @@
 </body>
 <script>
   function iptBlur() {
-    var ua = navigator.userAgent.toLowerCase();
-    if (/iphone|ipad|ipod/.test(ua)) {
-      // alert('ios端');
-      let currentPosition, timer;
+    if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
       let speed = 1;
-      timer = setInterval(function () {
-        currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
+      setTimeout(function () {
+        var currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
         currentPosition -= speed;
         window.scrollTo(0, currentPosition); // 页面向上滚动
         currentPosition += speed;
         window.scrollTo(0, currentPosition); // 页面向下滚动
-        clearInterval(timer);
-      }, 100);
-    } else if (ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1) {
-      // alert('android端');
+      });
     }
   }
 </script>
