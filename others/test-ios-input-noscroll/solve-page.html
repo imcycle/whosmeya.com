@@ -35,10 +35,11 @@
 </body>
 <script>
   function iptBlur() {
-    if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-      // $alert('ios端');
+    var ua = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(ua)) {
+      alert('ios端');
       let currentPosition, timer;
-      let speed = 1;
+      let speed = 20;
       timer = setInterval(function () {
         currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
         currentPosition -= speed;
