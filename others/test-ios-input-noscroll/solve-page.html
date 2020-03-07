@@ -37,9 +37,9 @@
   function iptBlur() {
     var ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(ua)) {
-      alert('ios端');
+      // alert('ios端');
       let currentPosition, timer;
-      let speed = 20;
+      let speed = 1;
       timer = setInterval(function () {
         currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
         currentPosition -= speed;
