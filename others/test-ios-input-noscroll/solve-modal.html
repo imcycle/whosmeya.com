@@ -17,10 +17,6 @@
       height: 100%;
     }
 
-    body {
-      position: relative;
-    }
-
     #root {
       overflow: auto;
     }
@@ -40,34 +36,34 @@
       <br />
       <button onclick="showModal()">点我弹出框</button>
     </div>
-  </div>
 
-  <!-- 弹框 -->
-  <div id="modal" style="
-    position: absolute; 
-    top: 0; 
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, .7);
-    display: none;
-  ">
-    <div style="
-      position: absolute;
+    <!-- 弹框 -->
+    <div id="modal" style="
+      position: fixed; 
+      top: 0; 
       left: 0;
-      bottom: 0;
-      background: #fff;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, .7);
+      display: none;
     ">
-      <button onclick="hiddenModal()">点我隐藏弹框</button>
-      <br />
-      <br />
-      <button onclick="alert(1)">点我alert(1)，我不会错位</button>
-      <br />
-      <br />
-      <input placeholder="请输入" />
+      <div style="
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          background: #fff;
+          width: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+        ">
+        <button onclick="hiddenModal()">点我隐藏弹框</button>
+        <br />
+        <br />
+        <button onclick="alert(1)">点我alert(1)，我不会错位</button>
+        <br />
+        <br />
+        <input placeholder="请输入" />
+      </div>
     </div>
   </div>
 
