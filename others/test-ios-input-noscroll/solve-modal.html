@@ -48,21 +48,21 @@
       display: none;
     ">
       <div style="
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          background: #fff;
-          width: 100%;
-          padding: 20px;
-          box-sizing: border-box;
-        ">
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+      ">
         <button onclick="hiddenModal()">点我隐藏弹框</button>
         <br />
         <br />
         <button onclick="alert(1)">点我alert(1)，我不会错位</button>
         <br />
         <br />
-        <input placeholder="请输入" />
+        <input onblur="inputBlur()" placeholder="请输入" />
       </div>
     </div>
   </div>
@@ -75,6 +75,19 @@
 
   function hiddenModal() {
     modal.style.display = 'none';
+  }
+
+  function inputBlur() {
+    if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
+      let speed = 1;
+      setTimeout(function () {
+        var currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
+        currentPosition -= speed;
+        window.scrollTo(0, currentPosition); // 页面向上滚动
+        currentPosition += speed;
+        window.scrollTo(0, currentPosition); // 页面向下滚动
+      });
+    }
   }
 </script>
 
