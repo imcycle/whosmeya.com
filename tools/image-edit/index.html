@@ -7,47 +7,114 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>图片加文字</title>
   <style>
-    .item {
-      margin-bottom: 10px;
+    * {
+      padding: 0;
+      margin: 0;
     }
 
-    .item span {
+    body {
+      padding: 20px;
+    }
+
+    #tab {
+      overflow: hidden;
+    }
+
+    #tab div {
+      float: left;
+      height: 26px;
+      line-height: 26px;
+      font-size: 12px;
+      padding: 0 16px;
+      color: rgba(0, 0, 0, 0.65);
+      border: 1px solid #d9d9d9;
+    }
+
+    #tab .tab-checked {
+      color: #108ee9;
+      border-color: #108ee9;
+    }
+
+    #fontBox {
       display: inline-block;
-      width: 100px;
-      text-align: right;
+      background: #4e4e4e;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      width: 280px;
     }
 
-    .item input {
-      display: inline-block !important;
+
+    #lineWidth {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
     }
 
-    .dragBox {
-      display: inline-block;
-      position: relative;
-      margin-left: 20px;
+    #lineWidth div {
+      float: left;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #a5a5a5;
+      margin: 0 6px;
     }
 
-    .image {
-      border: 1px dotted #ccc;
+    #lineWidth .lineWidth-checked {
+      background: #fff;
     }
 
-    #imgTxt {
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-size: 20px;
-      line-height: 20px;
-      font-family: Arial;
-      /* opacity: 0; */
+    #fontSize {
+      width: 50px;
+      margin-right: 10px;
+    }
+
+    #color::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    #color div {
+      float: left;
+      width: 20px;
+      height: 20px;
+      margin: 0 2px;
+      border: 2px solid #4e4e4e;
+    }
+
+    #color .color-checked {
+      border-color: #fff;
     }
 
 
     #myBox {
       display: inline-block;
+      position: relative;
+      margin-top: 20px;
     }
 
     #myCanvas {
-      border: 1px dotted #ccc;
+      border: 1px dotted #d9d9d9;
+    }
+
+    #myImg {
+      border: 1px dotted #d9d9d9;
+    }
+
+
+
+    .pureInput {
+      background: none;
+      border: none;
+      line-height: 1;
+      display: inline-block;
+      position: absolute;
+      padding: 0 6px;
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
@@ -55,68 +122,106 @@
 <body>
   <div>
     <input id="fileIpt" type="file" accept="image/*" mutiple="mutiple" />
-
-    <h3>类型</h3>
-    <div id="type">
-      <label><input id="sdf" type="radio" name="type" value="RECTANGLE" />插入矩形</label>
-      <label><input type="radio" name="type" value="DRAW" />插入画笔</label>
-      <label><input type="radio" name="type" value="FONT" />插入文字</label>
-    </div>
-
-    <h3>字体大小</h3>
-    <div id="fontsize">
-      <label><input type="radio" name="fontsize" value="22" />22</label>
-      <label><input type="radio" name="fontsize" value="18" />18</label>
-      <label><input type="radio" name="fontsize" value="14" />14</label>
-    </div>
-
-    <h3>颜色</h3>
-    <div id="color">
-      <label style="color: #ff0000;"><input type="radio" name="color" value="ff0000" />#ff0000</label>
-      <label style="color: #0000ff;"><input type="radio" name="color" value="0000ff" />#0000ff</label>
-      <label style="color: #00ff00;"><input type="radio" name="color" value="00ff00" />#00ff00</label>
-      <label style="color: #000000;"><input type="radio" name="color" value="000000" />#000000</label>
-      <label style="color: #ffffff;"><input type="radio" name="color" value="ffffff" />#ffffff</label>
-    </div>
-
-
-
-    <div class="dragBox">
-      <img id="img" class="image" />
-      <span id="imgTxt"></span>
-    </div>
-
+    <br />
     <div id="myBox">
       <canvas id="myCanvas"></canvas>
     </div>
+
+    <div id="tab">
+      <div type="RECTANGLE">插入矩形</div>
+      <div type="DRAW">插入画笔</div>
+      <div type="WORD">插入文字</div>
+    </div>
+    <div id="fontBox" class="hidden">
+      <select id="fontSize">
+        <option value="14px">小</option>
+        <option value="20px">中</option>
+        <option value="26px">大</option>
+      </select>
+      <div id="lineWidth">
+        <div style="padding: 0px;" lineWidth="2" class="lineWidth-checked"></div>
+        <div style="padding: 2px;" lineWidth="4"></div>
+        <div style="padding: 4px;" lineWidth="6"></div>
+      </div>
+      <div id="color">
+        <div style="background: #ff0000;" color="#ff0000" class="color-checked"></div>
+        <div style="background: #0000ff;" color="#0000ff"></div>
+        <div style="background: #00ff00;" color="#00ff00"></div>
+        <div style="background: #000000;" color="#000000"></div>
+        <div style="background: #ffffff;" color="#ffffff"></div>
+      </div>
+    </div>
+    <button id="exportBtn">导出</button>
+    <div>
+      <img id="myImg" />
+    </div>
   </div>
   <script>
-    var stack = []; // 
+    var stack = [{
+      c: 12,  // canvas
+      tl: [   // input list
+        {
+          text: 12,
+          color: 12,
+          fontsize: 12,
+          left: 0,
+          top: 0,
+        }
+      ]
+    }];
 
     var type,
-      fontsize = '14',
-      color = 'ff0000';
+      fontSize = '14px',
+      lineWidth = '2',
+      color = '#ff0000';
 
+    var myBox = document.getElementById('myBox'),
+      fontBox = document.getElementById('fontBox'),  // 
+      tabBox = document.getElementById('tab'),  // 类型选择
+      fontSizeBox = document.getElementById('fontSize'),  // 字体选择框
+      lineWidthBox = document.getElementById('lineWidth'),  // 线宽选择框
+      colorBox = document.getElementById('color');   // 颜色选择框
     var c = document.getElementById('myCanvas');
     var ctx = c.getContext('2d');
 
+    // 改变tab
+    var tabs = tabBox.getElementsByTagName('div');
+    Array.prototype.forEach.call(tabs, event => {
+      event.onclick = function () {
+        console.log(1)
+        type = event.getAttribute('type');  // 设置全局type
+        Array.prototype.forEach.call(tabs, d => d.classList.remove('tab-checked'));  // 删除class
+        event.classList.add('tab-checked');  // 添加class
 
-    // 选择
-    document.getElementById('type').addEventListener('click', function (e) {
-      if (e.target.tagName === 'INPUT') {
-        type = e.target.value;
+        fontBoxChange(type);  // fontbox样式
+        myBoxChange(type);  // 根据类型添加或删除mybox的事件
       }
     })
-    document.getElementById('fontsize').addEventListener('click', function (e) {
-      if (e.target.tagName === 'INPUT') {
-        fontsize = e.target.value;
+
+    // 改变字体大小
+    fontSizeBox.onchange = (e) => {
+      fontSize = e.target.value;
+    }
+
+    // 改变lineWidth
+    var lineWidthNodeList = lineWidthBox.getElementsByTagName('div');
+    Array.prototype.forEach.call(lineWidthNodeList, event => {
+      event.onclick = function () {
+        lineWidth = event.getAttribute('lineWidth');  // 设置全局lineWidth
+        Array.prototype.forEach.call(lineWidthNodeList, d => d.classList.remove('lineWidth-checked'));  // 删除class
+        event.classList.add('lineWidth-checked');  // 添加class
       }
     })
-    document.getElementById('color').addEventListener('click', function (e) {
-      if (e.target.tagName === 'INPUT') {
-        color = e.target.value;
+
+    // 改变颜色
+    var colorNodeList = colorBox.getElementsByTagName('div');
+    for (let i = 0, colorNode; colorNode = colorNodeList[i++];) {
+      colorNode.onclick = function () {
+        color = colorNode.getAttribute('color');  // 设置全局color
+        Array.prototype.forEach.call(colorNodeList, d => d.classList.remove('color-checked'));  // 删除class
+        colorNode.classList.add('color-checked');  // 添加class
       }
-    })
+    }
 
     // 导入img
     var originalImg = new Image();
@@ -133,55 +238,161 @@
       reader.readAsDataURL(e.target.files[0]);
     }
 
-    // 写字
-    // var myBox = document.getElementById('myBox');
-    // myBox.addEventListener('mouse', function () {
-    //   console.log(1)
-    // })
 
+    /**
+     * 插入画笔
+     */
     // pc端
-    c.onmousedown = function (e) {
+    function openDrawType() {
+      c.addEventListener('mousedown', handleDrawMouseDown);
+      c.addEventListener('mouseout', handleDrawMouseOut);
+      c.addEventListener('mouseup', handleDrawMouseUp);
+    }
+    function closeDrawType() {
+      c.removeEventListener('mousedown', handleDrawMouseDown);
+      c.removeEventListener('mouseout', handleDrawMouseOut);
+      c.removeEventListener('mouseup', handleDrawMouseUp);
+    }
+    function handleDrawMouseDown(e) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
       ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
-      c.onmousemove = function (e) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.offsetX, e.offsetY);
-      }
+      c.addEventListener('mousemove', handleDrawMouseMove);
     }
-    c.onmouseup = function (e) {
-      c.onmousemove = null;
+    function handleDrawMouseOut(e) {
+      c.removeEventListener('mousemove', handleDrawMouseMove);
+      ctx.closePath();
+    }
+    function handleDrawMouseUp(e) {
+      c.removeEventListener('mousemove', handleDrawMouseMove);
+      ctx.closePath();
+    }
+    function handleDrawMouseMove(e) {
       ctx.lineTo(e.offsetX, e.offsetY);
       ctx.stroke();
     }
+
     // 移动端
     // document.body.addEventListener('touchmove', function (e) { e.preventDefault() }, { passive: false }); //passive 参数不能省略，用来兼容ios和android
-    c.ontouchstart = function (e) {
-      console.log(1)
-      ctx.beginPath();
-      ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
-      c.ontouchmove = function (e) {
-        console.log(2)
+    // c.ontouchstart = function (e) {
+    //   console.log(1)
+    //   ctx.beginPath();
+    //   ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+    //   c.ontouchmove = function (e) {
+    //     console.log(2)
 
-        ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+    //     ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+    //     ctx.stroke();
+    //     ctx.beginPath();
+    //     ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+    //   }
+    // }
+    // c.ontouchend = function (e) {
+    //   c.ontouchmove = null;
+    //   ctx.lineTo(e.offsetX, e.offsetY);
+    //   ctx.stroke();
+    // }
+
+
+    /**
+     * 插入文字
+     */
+    var txtDataList = [];  // 记录input信息  位置颜色等, 用于最终绘制
+    function openWordType() {
+      myBox.addEventListener('click', handleAddWord);
+    }
+    function closeWordType() {
+      myBox.removeEventListener('click', handleAddWord);
+    }
+    function handleAddWord(e) {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.target.tagName === 'CANVAS') {  // 新增input
+        var ipt = document.createElement('input');
+        ipt.setAttribute('class', 'pureInput');
+        var left = e.offsetX - 6;
+        var top = e.offsetY - 6;
+        ipt.style.left = left - 6 + 'px';
+        ipt.style.top = top - 6 + 'px';
+        ipt.style.fontSize = fontSize;
+        ipt.style.color = color;
+        myBox.appendChild(ipt);
+        ipt.focus();
+
+        txtDataList.push({  // 新增
+          ipt,
+          left,
+          top,
+          fontSize,
+          color,
+        })
+
+        ipt.onmousedown = function (e) {
+          var offsetLeft = myBox.offsetLeft;
+          var offsetTop = myBox.offsetTop;
+          var offsetX = e.offsetX;
+          var offsetY = e.offsetY;
+          var txtData = txtDataList.find(d => d.ipt === ipt);
+          ipt.onmousemove = function (e) {
+            var left = e.clientX - offsetLeft - offsetX;
+            var top = e.clientY - offsetTop - offsetY;
+            txtData.left = left; // 更新input信息
+            txtData.top = top; // 更新input信息
+            ipt.style.left = left + 'px';
+            ipt.style.top = top + 'px';
+          }
+        }
+        ipt.onmouseout = function (e) {
+          ipt.onmousemove = null;
+        }
+        ipt.onmouseup = function (e) {
+          ipt.onmousemove = null;
+        }
+        ipt.onblur = function () {
+          if (!ipt.value) {
+            // 删除txtlist
+            var index = txtDataList.findIndex(d => d.ipt === ipt);
+            if (~index) {
+              txtDataList.splice(index, 1)
+            }
+            // 删除dom
+            myBox.removeChild(ipt);
+          }
+        }
+      };
+    }
+
+
+
+    /**
+     * myBox
+     */
+    function myBoxChange(type) {
+      [closeDrawType, closeWordType,].forEach(d => d());  // 关闭事件
+      if (type === 'RECTANGLE') {     // 打开类型点击事件
+
+      } else if (type === 'DRAW') {
+        openDrawType();
+      } else if (type === 'WORD') {
+        openWordType();
       }
     }
-    c.ontouchend = function (e) {
-      c.ontouchmove = null;
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
+    /**
+     * fontBox
+     */
+    function fontBoxChange(type) {
+      fontBox.classList.remove('hidden');
+      if (type === 'RECTANGLE') {
+        fontSizeBox.classList.add('hidden');
+        lineWidthBox.classList.add('hidden');
+      } else if (type === 'DRAW') {
+        fontSizeBox.classList.add('hidden');
+        lineWidthBox.classList.remove('hidden');
+      } else if (type === 'WORD') {
+        fontSizeBox.classList.remove('hidden');
+        lineWidthBox.classList.add('hidden');
+      }
     }
-
-
-
-
-
-
-
 
 
     // function draw() {
@@ -198,6 +409,25 @@
     //   // 导出
     //   img.src = canvas.toDataURL('image/png');
     // }
+
+    // 导出为图片
+    document.getElementById('exportBtn').addEventListener('click', function () {
+      var cc = document.createElement('canvas');
+      var cctx = cc.getContext('2d');
+      cc.width = c.width;
+      cc.height = c.height;
+      cctx.drawImage(c, 0, 0, cc.width, cc.height);
+      txtDataList.forEach(d => {
+        cctx.font = d.fontSize + ' Arial';
+        cctx.fillStyle = d.color;
+        cctx.textAlign = "left";
+        cctx.textBaseline = "top";
+        cctx.fillText(d.ipt.value, d.left, d.top);
+      })
+
+      document.getElementById('myImg').src = cc.toDataURL('image/png');
+    })
+
   </script>
 </body>
 

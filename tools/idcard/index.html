@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>计算身份证最后一位</title>
+  <style>
+    input {
+      display: block;
+      width: 340px;
+      font-size: 20px;
+      line-height: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <h3>验证身份证是否正确</h3>
+  <input id="ipt_check" />
+  <button id="btn_check">检测</button>
+  <span id="result_check"></span>
+
+  <h3>根据前17位获取最后一位</h3>
+  <input id="ipt_getlast" />
+  <button id="btn_getlast">获取</button>
+  <span id="result_getlast"></span>
+</body>
+
+<script>
+  window.onload = function () {
+    var ipt_check = document.getElementById('ipt_check'),
+      btn_check = document.getElementById('btn_check'),
+      result_check = document.getElementById('result_check'),
+      ipt_getlast = document.getElementById('ipt_getlast'),
+      btn_getlast = document.getElementById('btn_getlast'),
+      result_getlast = document.getElementById('result_getlast');
+
+    btn_check.onclick = function () {
+      var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+      var val = ipt_check.value;
+      if (!val || !p.test(val)) {
+        result_check.innerText = "校验结果: 不通过";
+        return;
+      }
+      if (getLastCode(val) != val.substring(17).toUpperCase()) {
+        result_check.innerText = "校验结果: 不通过";
+        return;
+      }
+      result_check.innerText = "校验结果: 通过";
+      return;
+    }
+
+    btn_getlast.onclick = function () {
+      var p = /^[0-9]{17}$/;
+      var val = ipt_getlast.value;
+      if (!val || !p.test(val)) {
+        result_getlast.innerText = "结果: 格式有误";
+        return;
+      }
+      result_getlast.innerText = "结果: " + getLastCode(val);
+    }
+
+    function getLastCode(val) {
+      var factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+      var parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2];
+      var sum = 0;
+      for (var i = 0; i < 17; i++) {
+        sum += val[i] * factor[i];
+      }
+      return parity[sum % 11];
+    }
+  }
+</script>
+
+</html>

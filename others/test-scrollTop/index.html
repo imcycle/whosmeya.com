@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test-scrollTop</title>
+</head>
+
+<body>
+  <div id="topBox" style="height: 200px; border: 1px solid #000; overflow: auto;">
+    <ui>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+      <li>div内容</li>
+    </ui>
+  </div>
+  <div>
+    <button id="btn1">点我查看上面div.scrollTop，安卓ios效果一致</button>
+    <ui>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <button id="btn2">点我查看body.scrollTop，安卓能获取到，ios始终为0</button>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+      <li>body内容</li>
+
+    </ui>
+  </div>
+</body>
+<script>
+  btn1.onclick = function () {
+    alert(topBox.scrollTop)
+  }
+  btn2.onclick = function () {
+    alert(document.body.scrollTop)
+  }
+</script>
+
+</html>
