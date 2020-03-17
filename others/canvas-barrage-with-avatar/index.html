@@ -11,7 +11,7 @@
   <canvas id="canvas" style="background: #333;"></canvas>
 </body>
 <script>
-
+  // 圆角矩形
   CanvasRenderingContext2D.prototype.roundRect = function (left, top, width, height, r) {
     const pi = Math.PI;
     this.beginPath();
@@ -27,124 +27,114 @@
       this.scale = 2;  // 缩放倍数，1会糊
       this.canvas = document.getElementById(id);
       this.canvas.width = this.w = document.body.offsetWidth * this.scale;
-      this.canvas.height = this.h = 200 * this.scale;
+      this.canvas.height = this.h = 220 * this.scale;
       this.canvas.style.width = this.w / this.scale + 'px';
 
       this.ctx = this.canvas.getContext('2d');
 
-      this.bf = 14 * this.scale;   // 字体大小
-      this.bh = 27 * this.scale;  // 盒子高度
-      this.bmb = 4 * this.scale;   // 盒子margin-bottom
-      this.bpx = 8 * this.scale;  // 盒子 padding x
-      this.ba = 18 * this.scale;  // 头像宽度
-      this.ctx.font = this.bf + 'px PingFangSC-Regular';
+      this.style = { // 弹幕样式
+        height: 27 * this.scale,  // 弹幕高度
+        fontSize: 14 * this.scale,  // 字体大小
+        marginBottom: 4 * this.scale,  // 弹幕 margin-bottom
+        paddingX: 8 * this.scale,  // 弹幕 padding x
+        avatarWidth: 18 * this.scale,  // 头像宽度
+      }
+      this.ctx.font = this.style.fontSize + 'px PingFangSC-Regular';
 
       this.barrageList = [];  // 弹幕列表
       this.rowStatusList = [];  // 记录每行是否可插入，防止重叠。 行号为可插入 false为不可插入
 
-      let rowLength = Math.floor(this.h / (this.bh + this.bmb));
+      let rowLength = Math.floor(this.h / (this.style.height + this.style.marginBottom));
       for (var i = 0; i < rowLength; i++) {
         this.rowStatusList.push(i)
       }
     }
 
     shoot(value) {
+      const { height, avatarWidth, fontSize, marginBottom, paddingX } = this.style;
+      const { img, t1, t2 } = value;
       let row = this.getRow();
       let color = this.getColor();
       let offset = this.getOffset();
-      let left_0 = this.bpx;
-      let left_1 = left_0 + this.ba + 8;
-      let left_2 = left_1 + Math.ceil(this.ctx.measureText(value[1]).width) + 8;
-      let left_3 = left_2 + Math.ceil(this.ctx.measureText(value[2]).width) + this.bpx;
+      let w_0 = paddingX;  // 头像开始位置
+      let w_1 = w_0 + avatarWidth + 8;  // t1文字开始位置
+      let w_2 = w_1 + Math.ceil(this.ctx.measureText(t1).width) + 8;  // t2文字开始位置
+      let w_3 = w_2 + Math.ceil(this.ctx.measureText(t2).width) + paddingX;  // 弹幕总长度
 
       let barrage = {
         value,
-        row,
         color,
+        row,
+        top: row * (height + marginBottom),
         left: this.w,
         offset,
-        left_0,
-        left_1,
-        left_2,
-        left_3,
+        width: [w_0, w_1, w_2, w_3],
       }
 
       this.barrageList.push(barrage);
-
     }
 
     draw() {
       if (!!this.barrageList.length) {
         this.ctx.clearRect(0, 0, this.w, this.h);
         for (let i = 0, barrage; barrage = this.barrageList[i]; i++) {
-          if (barrage.left + barrage.left_3 <= 0) {
+          // 弹幕滚出屏幕，从数组中移除
+          if (barrage.left + barrage.width[3] <= 0) {
             this.barrageList.splice(i, 1);
             i--;
             continue;
           }
 
+          // 弹幕完全滚入屏幕，当前行可插入
           if (!barrage.rowFlag) {
-            if ((barrage.left + barrage.left_3) < this.w) {
+            if ((barrage.left + barrage.width[3]) < this.w) {  // 
               this.rowStatusList[barrage.row] = barrage.row;
               barrage.rowFlag = true;
             }
           }
 
           barrage.left -= barrage.offset;
-          this.drawContent(barrage);
+          this.drawBarrage(barrage);
         }
       }
       requestAnimationFrame(this.draw.bind(this));
     }
 
-    drawContent(barrage) {
+    drawBarrage(barrage) {
+      const { height, avatarWidth, fontSize, marginBottom, paddingX } = this.style;
       const {
-        value,
+        value: { img, t1, t2 },
         color,
         row,
         left,
+        top,
         offset,
-        left_0,
-        left_1,
-        left_2,
-        left_3,
+        width,
       } = barrage;
 
-      let top = row * (this.bh + this.bmb);
-
-      if (!value.pattern) {
-        value.pattern = this.ctx.createPattern(value[0], "no-repeat");
-      }
-
       // 画框子
-      this.ctx.roundRect(
-        left,
-        top,
-        left_3,
-        this.bh,
-        this.bh / 2 ,
-      )
+      this.ctx.roundRect(left, top, width[3], height, height / 2)
       this.ctx.fillStyle = 'rgba(255,255,255,0.50)';
       this.ctx.fill();
       // 画头像
-      this.ctx.drawImage(value[0], 0, 0, value[0].width, value[0].height, left + left_0, top + (this.bh - this.ba) / 2, this.ba, this.ba);
+      this.ctx.drawImage(img, 0, 0, img.width, img.height, left + width[0], top + (height - avatarWidth) / 2, avatarWidth, avatarWidth);
       // 画黑色的字
       this.ctx.fillStyle = color;
-      this.ctx.fillText(value[1], left + left_1, top + this.bf + 8);
+      this.ctx.fillText(t1, left + width[1], top + fontSize + 8);
       // 画红色的字
       this.ctx.fillStyle = '#F24949';
-      this.ctx.fillText(value[2], left + left_2, top + this.bf + 8);
+      this.ctx.fillText(t2, left + width[2], top + fontSize + 8);
     }
 
     getRow() {
-      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));
-      let row = emptyRowList[Math.floor(Math.random() * emptyRowList.length)]
+      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));  // 找出可插入行
+      let row = emptyRowList[Math.floor(Math.random() * emptyRowList.length)];  // 随机选一行
       this.rowStatusList[row] = false;
       return row;
     }
 
     haveEmptyRow() {
-      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));
+      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));  // 找出可插入行
       return !!emptyRowList.length;
     }
 
@@ -170,6 +160,7 @@
     }
   ]
 
+  // 循环插入发射弹幕
   var index = 0;
   var shootBarrage = function (list) {
     setTimeout(function () {
@@ -179,12 +170,15 @@
         var img = new Image();
         img.setAttribute("crossOrigin", 'anonymous');
         img.onload = function () {
-          barrage.shoot([img, data.t1, data.t2]);
+          barrage.shoot({
+            img,
+            t1: data.t1,
+            t2: data.t2,
+          });
         }
-
         img.src = data.avatar;
       }
-      shootBarrage(list)
+      shootBarrage(list);
     }, 1000)
   }
 
