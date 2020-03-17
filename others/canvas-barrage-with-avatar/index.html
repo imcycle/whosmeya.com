@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>弹幕（头像，文字）</title>
+</head>
+
+<body>
+  <canvas id="canvas" style="background: #333;"></canvas>
+</body>
+<script>
+
+  CanvasRenderingContext2D.prototype.roundRect = function (left, top, width, height, r) {
+    const pi = Math.PI;
+    this.beginPath();
+    this.arc(left + r, top + r, r, -pi, -pi / 2);
+    this.arc(left + width - r, top + r, r, -pi / 2, 0);
+    this.arc(left + width - r, top + height - r, r, 0, pi / 2);
+    this.arc(left + r, top + height - r, r, pi / 2, pi);
+    this.closePath();
+  }
+
+  class Barrage {
+    constructor(id) {
+      this.scale = 2;  // 缩放倍数，1会糊
+      this.canvas = document.getElementById(id);
+      this.canvas.width = this.w = document.body.offsetWidth * this.scale;
+      this.canvas.height = this.h = 200 * this.scale;
+      this.canvas.style.width = this.w / this.scale + 'px';
+
+      this.ctx = this.canvas.getContext('2d');
+
+      this.bf = 14 * this.scale;   // 字体大小
+      this.bh = 27 * this.scale;  // 盒子高度
+      this.bmb = 4 * this.scale;   // 盒子margin-bottom
+      this.bpx = 8 * this.scale;  // 盒子 padding x
+      this.ba = 18 * this.scale;  // 头像宽度
+      this.ctx.font = this.bf + 'px PingFangSC-Regular';
+
+      this.barrageList = [];  // 弹幕列表
+      this.rowStatusList = [];  // 记录每行是否可插入，防止重叠。 行号为可插入 false为不可插入
+
+      let rowLength = Math.floor(this.h / (this.bh + this.bmb));
+      for (var i = 0; i < rowLength; i++) {
+        this.rowStatusList.push(i)
+      }
+    }
+
+    shoot(value) {
+      let row = this.getRow();
+      let color = this.getColor();
+      let offset = this.getOffset();
+      let left_0 = this.bpx;
+      let left_1 = left_0 + this.ba + 8;
+      let left_2 = left_1 + Math.ceil(this.ctx.measureText(value[1]).width) + 8;
+      let left_3 = left_2 + Math.ceil(this.ctx.measureText(value[2]).width) + this.bpx;
+
+      let barrage = {
+        value,
+        row,
+        color,
+        left: this.w,
+        offset,
+        left_0,
+        left_1,
+        left_2,
+        left_3,
+      }
+
+      this.barrageList.push(barrage);
+
+    }
+
+    draw() {
+      if (!!this.barrageList.length) {
+        this.ctx.clearRect(0, 0, this.w, this.h);
+        for (let i = 0, barrage; barrage = this.barrageList[i]; i++) {
+          if (barrage.left + barrage.left_3 <= 0) {
+            this.barrageList.splice(i, 1);
+            i--;
+            continue;
+          }
+
+          if (!barrage.rowFlag) {
+            if ((barrage.left + barrage.left_3) < this.w) {
+              this.rowStatusList[barrage.row] = barrage.row;
+              barrage.rowFlag = true;
+            }
+          }
+
+          barrage.left -= barrage.offset;
+          this.drawContent(barrage);
+        }
+      }
+      requestAnimationFrame(this.draw.bind(this));
+    }
+
+    drawContent(barrage) {
+      const {
+        value,
+        color,
+        row,
+        left,
+        offset,
+        left_0,
+        left_1,
+        left_2,
+        left_3,
+      } = barrage;
+
+      let top = row * (this.bh + this.bmb);
+
+      if (!value.pattern) {
+        value.pattern = this.ctx.createPattern(value[0], "no-repeat");
+      }
+
+      // 画框子
+      this.ctx.roundRect(
+        left,
+        top,
+        left_3,
+        this.bh,
+        this.bh / 2 ,
+      )
+      this.ctx.fillStyle = 'rgba(255,255,255,0.50)';
+      this.ctx.fill();
+      // 画头像
+      this.ctx.drawImage(value[0], 0, 0, value[0].width, value[0].height, left + left_0, top + (this.bh - this.ba) / 2, this.ba, this.ba);
+      // 画黑色的字
+      this.ctx.fillStyle = color;
+      this.ctx.fillText(value[1], left + left_1, top + this.bf + 8);
+      // 画红色的字
+      this.ctx.fillStyle = '#F24949';
+      this.ctx.fillText(value[2], left + left_2, top + this.bf + 8);
+    }
+
+    getRow() {
+      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));
+      let row = emptyRowList[Math.floor(Math.random() * emptyRowList.length)]
+      this.rowStatusList[row] = false;
+      return row;
+    }
+
+    haveEmptyRow() {
+      let emptyRowList = this.rowStatusList.filter(d => /\d/.test(d));
+      return !!emptyRowList.length;
+    }
+
+    getColor() {
+      return '#000000';
+    }
+
+    getOffset() {
+      return 1 * this.scale;
+    }
+  }
+
+  var list = [
+    {
+      avatar: 'https://image.duliday.com/living-cost/20200303/2a94df636b91ad15bbbb4408e2f285e4164115?roundPic/radius/66',
+      t1: '张**三 给 李**四',
+      t2: '红包',
+    },
+    {
+      avatar: 'https://image.duliday.com/living-cost/20200303/2a94df636b91ad15bbbb4408e2f285e4164115?roundPic/radius/66',
+      t1: '王**五 给 赵**六',
+      t2: '红包',
+    }
+  ]
+
+  var index = 0;
+  var shootBarrage = function (list) {
+    setTimeout(function () {
+      if (barrage.haveEmptyRow()) {
+        var data = list[index++] || list[index = 0 && index++];
+
+        var img = new Image();
+        img.setAttribute("crossOrigin", 'anonymous');
+        img.onload = function () {
+          barrage.shoot([img, data.t1, data.t2]);
+        }
+
+        img.src = data.avatar;
+      }
+      shootBarrage(list)
+    }, 1000)
+  }
+
+  var barrage = new Barrage('canvas');
+  barrage.draw();
+  shootBarrage(list)
+
+</script>
+
+</html>
