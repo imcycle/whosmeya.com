@@ -165,8 +165,7 @@
   var shootBarrage = function (list) {
     setTimeout(function () {
       if (barrage.haveEmptyRow()) {
-        var data = list[index++] || list[index = 0 && index++];
-
+        var data = list[index++] || list[(index = 0) || index++];
         var img = new Image();
         img.setAttribute("crossOrigin", 'anonymous');
         img.onload = function () {
