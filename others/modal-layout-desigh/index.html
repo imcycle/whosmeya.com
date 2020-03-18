@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body,
+    #root {
+      height: 100%;
+    }
+
+    #root {
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <!-- 内容 -->
+    <div style="height: 150vh; background-image: linear-gradient(to bottom, #fff, #000);">
+      <div>内容高度150vh</div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <button onclick="showModal()">点我弹出框</button>
+    </div>
+
+    <!-- 弹框 -->
+    <div id="modal" style="
+      position: fixed; 
+      top: 0; 
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, .7);
+      display: none;
+    ">
+      <div style="
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+      ">
+        <button onclick="hiddenModal()">点我隐藏弹框</button>
+        <div>1</div>
+        <div>1</div>
+        <div>1</div>
+        <div>1</div>
+        <div>1</div>
+        <div>1</div>
+        <div>1</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script>
+  function showModal() {
+    modal.style.display = 'block';
+  }
+
+  function hiddenModal() {
+    modal.style.display = 'none';
+  }
+
+</script>
+
+</html>
