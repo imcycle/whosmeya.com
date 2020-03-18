@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>页面内不回弹</title>
+  <title>微信iOS input失焦页面不回弹</title>
   <style>
     * {
       padding: 0;
@@ -19,18 +19,23 @@
 
     #root {
       overflow: auto;
-      background: pink;
+      background: #eee;
     }
   </style>
 </head>
 
 <body>
   <div id="root">
-    <div style="height: 10vh;"></div>
-    <input />
+    <div>问题描述：微信浏览器iOS设备input输入唤起软键盘，页面上抬，确定后页面不回弹。</div>
     <div style="height: 60vh;"></div>
-    <input onblur="iptBlur()" />
-    <div style="height: 30vh"></div>
+    <hr />
+    <div>有问题的输入框</div>
+    <div>iOS设备，下面输入框失去焦点后，页面不会回弹</div>
+    <input placeholder="有问题的输入框" />
+    <hr />
+    <div>解决问题后的输入框</div>
+    <div>iOS设备，下面输入框失去焦点后，页面会回弹</div>
+    <input placeholder="解决问题的输入框" onblur="iptBlur()" />
   </div>
 </body>
 <script>
