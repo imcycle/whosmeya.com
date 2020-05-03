@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常用方程曲线</title>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  function draw({ name, equation, max, }) {
+    max = max || 2;
+    var a = 400, b = a / 2;
+    var scale = max * 2 / a;
+    var root = document.getElementById('root');
+    var c = document.createElement('canvas');
+    c.style.padding = '20px';
+    c.style.margin = '20px';
+    c.style.boxShadow = '0 0 100px 0';
+    root.appendChild(c)
+    c.width = a;
+    c.height = a;
+    var ctx = c.getContext('2d');
+    ctx.beginPath();
+
+    // 函数名
+    ctx.fillText(name, 20, 20);
+
+    // 画坐标轴
+    ctx.moveTo(0, b);
+    ctx.lineTo(a, b);
+    ctx.moveTo(b, 0);
+    ctx.lineTo(b, a);
+    ctx.fillText('0', b - 12, b + 13);
+    ctx.fillText('x', a - 12, b + 12);
+    ctx.fillText('y', b + 6, 0 + 12);
+
+    // 画坐标刻度
+    var part = a / 4;
+    ctx.moveTo(1 * part, b);
+    ctx.lineTo(1 * part, b - 5);
+    ctx.fillText(-max / 2, 1 * part - 12, b + 14);
+    ctx.moveTo(3 * part, b);
+    ctx.lineTo(3 * part, b - 5);
+    ctx.fillText(max / 2, 3 * part - 6, b + 14);
+    ctx.moveTo(b, 1 * part);
+    ctx.lineTo(b + 5, 1 * part);
+    ctx.fillText(max / 2, b - 16, 1 * part + 4);
+    ctx.moveTo(b, 3 * part);
+    ctx.lineTo(b + 5, 3 * part);
+    ctx.fillText(-max / 2, b - 22, 3 * part + 4);
+
+
+    // 画方程
+    var isMoved = false;
+    for (var i = -b; i < b; i++) {
+      var value = equation(i * scale) / scale;
+      if (value) {
+        if (!isMoved) {
+          ctx.moveTo(b + i, b - value);
+          isMoved = true;
+        } else {
+          ctx.lineTo(b + i, b - value);
+        }
+      }
+    }
+
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+
+  draw({
+    name: 'y=2x',
+    equation: function (x) {
+      return 2 * x;
+    },
+  });
+
+  draw({
+    name: 'y=x^2',
+    equation: function (x) {
+      return Math.pow(x, 2);
+    },
+  });
+
+  draw({
+    name: 'y=log e x',
+    equation: function (x) {
+      if (x > 0) {
+        return Math.log(x);
+      } else {
+        return null;
+      }
+    },
+    max: 4,
+  });
+
+  draw({
+    name: 'y=1/x',
+    equation: function (x) {
+      return 1 / x;
+    },
+    max: 4
+  });
+
+  draw({
+    name: 'y=1/x^3',
+    equation: function (x) {
+      return 1 / Math.pow(x, 3);
+    },
+    max: 4
+  });
+
+</script>
+
+</html>
