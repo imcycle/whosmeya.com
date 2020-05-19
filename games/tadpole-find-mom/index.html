@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>小蝌蚪找妈妈</title>
+  <style>
+    .bigBox {
+      display: flex;
+      position: relative;
+    }
+
+    #ranking {
+      padding-left: 10px;
+    }
+
+    #submitBox {
+      position: absolute;
+      left: 340px;
+      top: 287px;
+      text-align: center;
+      color: #fff;
+    }
+
+    #submitBox input {
+      background: none;
+      outline: none;
+      border: 0;
+      color: #fff;
+      text-align: center;
+      border-bottom: 1px solid #fff;
+      margin-bottom: 6px;
+    }
+
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bigBox">
+    <div id="box"></div>
+    <div id="ranking"></div>
+    <div id="submitBox" class="hide">
+      <span>恭喜你进入排行榜</span>
+      <br />
+      <input id="rankingNameIpt" placeholder="请输入你的昵称" />
+      <br />
+      <button onclick="newRanking()">提交</button>
+    </div>
+  </div>
+  <button onclick="newGame()">重新开始</button>
+  <span>用时:</span><span id="timeBox">0</span>
+  <script src="./js/request.js"></script>
+  <script src="./js/game.js"></script>
+  <script src="./js/controller.js"></script>
+  <script src="./js/render.js"></script>
+</body>
+
+</html>

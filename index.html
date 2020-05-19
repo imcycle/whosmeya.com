@@ -7,53 +7,309 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+  <style>
+    html,
+    body,
+    #root {
+      height: 100%;
+    }
+
+    a {
+      color: #935a32;
+    }
+
+    a:hover {
+      color: #935a32;
+    }
+
+    .bg_header {
+      background: url('https://www.cnblogs.com/skins/coffee/images/header.gif') right top no-repeat;
+    }
+
+    .bg_header_content {
+      background: url('https://www.cnblogs.com/skins/coffee/images/bg_title.gif') 170px 40px no-repeat;
+    }
+
+    .bg_body {
+      background: url('https://www.cnblogs.com/skins/coffee/images/bg_body.gif') left top;
+    }
+
+    .bg_left {
+      background: #fefef2 url('https://www.cnblogs.com/skins/coffee/images/bg_left.gif') left top repeat-x;
+    }
+
+    .header {
+      height: 178px;
+    }
+
+    #nav-article a {
+      color: #212529;
+    }
+
+    #nav-article a:hover {
+      color: #935a32;
+    }
+
+    .listImg {
+      width: 64px;
+      height: 64px;
+    }
+  </style>
   <title>实用小工具</title>
 </head>
 
-<body>
-  <div id="root" class="p-2">
+<body class="bg_body">
+  <div id="root">
+    <div class="header bg_header">
+      <div class="container p-5 bg_header_content">
+        <a style="font-size: 2rem;" href="https://www.whosmeya.com">whosmeya</a>
+      </div>
+    </div>
 
-    <h3>工具列表</h3>
-    <a class="btn btn-primary mb-2" href="./tools/avatar-add-frame/index.html">头像添加边框</a>
-    <a class="btn btn-primary mb-2" href="./tools/image-add-word/index.html">图片添加文字</a>
-    <a class="btn btn-primary mb-2" href="./tools/image-edit/index.html">图片编辑</a>
-    <a class="btn btn-primary mb-2" href="./tools/mortgage-calculator/index.html">房贷计算器</a>
-    <a class="btn btn-primary mb-2" href="./tools/encode/index.html">URI转码</a>
-    <a class="btn btn-primary mb-2" href="./tools/idcard/index.html">身份证校验</a>
+    <div class="container bg_left pt-5" style="min-height: 100%;">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <!-- 文章 -->
+          <a class="nav-item nav-link active" id="nav-article-tab" data-toggle="tab" href="#nav-article" role="tab" aria-controls="nav-article" aria-selected="true">文章</a>
+          <!-- sth -->
+          <a class="nav-item nav-link " id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">STH</a>
+          <!-- 游戏 -->
+          <a class="nav-item nav-link" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="false">游戏</a>
+          <!-- 个人项目 -->
+          <a class="nav-item nav-link" id="nav-project-tab" data-toggle="tab" href="#nav-project" role="tab" aria-controls="nav-project" aria-selected="false">个人项目</a>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <!-- 文章 -->
+        <div class="tab-pane fade p-4 show active" id="nav-article" role="tabpanel" aria-labelledby="nav-article-tab"></div>
+        <!-- sth -->
+        <div class="tab-pane fade p-4" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <h4>工具</h4>
+          <a class="btn btn-primary mb-2" href="./sth/avatar-add-frame/index.html">头像添加边框</a>
+          <a class="btn btn-primary mb-2" href="./sth/image-add-word/index.html">图片添加文字</a>
+          <a class="btn btn-primary mb-2" href="./sth/image-edit/index.html">图片编辑</a>
+          <a class="btn btn-primary mb-2" href="./sth/mortgage-calculator/index.html">房贷计算器</a>
+          <a class="btn btn-primary mb-2" href="./sth/encode/index.html">URI转码</a>
+          <a class="btn btn-primary mb-2" href="./sth/idcard/index.html">身份证校验</a>
+          <h4>Canvas</h4>
+          <a class="btn btn-primary mb-2" href="./sth/canvas-barrage/index.html">原生Canvas视频发射弹幕</a>
+          <a class="btn btn-primary mb-2" href="./sth/canvas-barrage-with-avatar/index.html">原生Canvas循环滚动弹幕（带头像）</a>
+          <a class="btn btn-primary mb-2" href="./sth/canvas-the-matrix/index.html">Canvas黑客帝国</a>
+          <a class="btn btn-primary mb-2" href="./sth/canvas-draw-equation/index.html">Canvas绘制常用方程曲线</a>
+          <h4>疑难杂症</h4>
+          <a class="btn btn-primary mb-2" href="./sth/body-scrollTop/index.html">Android iOS 获取 body.scrollTop 不一致</a>
+          <a class="btn btn-primary mb-2" href="./sth/iOS-input-rollback/index.html">微信浏览器 iOS input 失焦页面不回弹</a>
+          <h4>其他</h4>
+          <a class="btn btn-primary mb-2" href="./sth/history-route/index.html">前端history路由实现</a>
+          <a class="btn btn-primary mb-2" href="./sth/css-heart/index.html">CSS实现“心”</a>
+          <a class="btn btn-primary mb-2" href="./sth/modal-layout-desigh/index.html">弹出框布局设计</a>
+          <a class="btn btn-primary mb-2" href="./sth/input-file/index.html">原生Input type="file"效果</a>
+        </div>
+        <!-- 游戏 -->
+        <div class="tab-pane fade p-4" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
+          <a class="btn btn-primary mb-2" href="./games/tadpole-find-mom/index.html">小蝌蚪找妈妈</a>
+          <a class="btn btn-primary mb-2" href="./games/tank/index.html">坦克大战</a>
+        </div>
+        <!-- 个人项目 -->
+        <div class="tab-pane fade p-4" id="nav-project" role="tabpanel" aria-labelledby="nav-project-tab"></div>
+      </div>
+    </div>
 
-    <h3>Canvas</h3>
-    <a class="btn btn-primary mb-2" href="./others/canvas-barrage/index.html">原生Canvas视频发射弹幕</a>
-    <a class="btn btn-primary mb-2" href="./others/canvas-barrage-with-avatar/index.html">原生Canvas循环滚动弹幕（带头像）</a>
-    <a class="btn btn-primary mb-2" href="./others/canvas-the-matrix/index.html">Canvas黑客帝国</a>
-    <a class="btn btn-primary mb-2" href="./others/canvas-draw-equation/index.html">Canvas绘制常用方程曲线</a>
+    <div class="bg-dark text-white ">
+      <div class="container py-4">
+        爱编程，爱生活。
+        <div style="text-align: center;">
+          <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011002004530" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+            <img src="./img/bn.png" style="float:left;" />
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">
+              沪公网安备 31011002004530号
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
 
-    <h3>疑难杂症</h3>
-    <a class="btn btn-primary mb-2" href="./bug/body-scrollTop/index.html">Android iOS 获取 body.scrollTop 不一致</a>
-    <a class="btn btn-primary mb-2" href="./bug/iOS-input-rollback/index.html">微信浏览器 iOS input 失焦页面不回弹</a>
-
-
-    <h3>其他列表</h3>
-    <a class="btn btn-primary mb-2" href="./others/history-route/index.html">前端history路由实现</a>
-    <a class="btn btn-primary mb-2" href="./others/css-heart/index.html">CSS实现“心”</a>
-    <a class="btn btn-primary mb-2" href="./others/modal-layout-desigh/index.html">弹出框布局设计</a>
-    <a class="btn btn-primary mb-2" href="./others/input-file/index.html">原生Input type="file"效果</a>
-  
   </div>
+
+  <!-- 查看小程序二维码弹框 -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">二维码</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img style="display: block; margin: 0 auto; width: 215px;" src="./img/mini-scan.jpg" />
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  <!-- 文章 -->
+  <script>
+    var articleList = [
+      {
+        title: 'JavaScript运行机制',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '本文要讲的是，浏览器读一个script代码的流程是什么，遇到异步代码会如何处理，宏观任务和微观任务如何处理。 首先要说一个栈模型，函数的调用形成了栈帧。 例如这段代码，调用 时，创建第一帧； 调用 时，创建第二帧。第二帧压在第一帧之上，当 运行完成，此时最上层第二帧弹出栈，当 运行完成，此时最上层...',
+        link: 'https://juejin.im/post/5e3e561d518825492c04f4a1',
+      },
+      {
+        title: 'Nginx配置Web项目（多页面应用，单页面应用）',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '摘要：目前前端项目 可分两种： 多页面应用，单页面应用。 单页面应用 入口是一个html文件，页面路由由js控制，动态往html页面插入DOM。 多页面应用 是由多个html文件组成，浏览器访问的是对应服务器的html文件。 多页面应用 目录结构 上面这种情况 index.html 不在根目录下，ngin...',
+        link: 'https://www.cnblogs.com/whosMeya/p/12466396.html',
+      },
+      {
+        title: '使用express+shell在服务器上搭建一套简单的前端部署系统',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '摘要：前言 个人项目越来越多，部署需要频繁操作服务器，所以手动搭建一套简单的部署系统。 效果如图 其中包含 原生html+css+js项目，单页面react, vue, angular项目，实现了一键打包发版。 实现思路 json文件：记录项目部署状态 shell脚本：仓库拉取代码，项目打包，移动资源到服...',
+        link: 'https://www.cnblogs.com/whosMeya/p/12435975.html',
+      },
+      {
+        title: 'Canvas图片处理',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '图片处理 在前端业务中并不陌生。例如手机自带相机拍出的照片通常好几兆，但如果只是用作头像就显然太大，需要 图片压缩 后再上传服务器；在例如前段时间比较火的迎国庆换头像，就用到了 图片与图片的合成。本文将介绍前端常见的 Canvas 图片处理方法。 图片缩放，图片剪裁，图片与图片的合成 主要用了 方...',
+        link: 'https://juejin.im/post/5e4d4dfde51d4526c80e9880',
+      },
+      {
+        title: 'JavaScript零宽字符',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '一种不可打印的Unicode字符. 表示某一种控制功能的字符. 利用零宽字符在浏览器环境不显示,可以将零宽字符插入文本中,干扰关键字匹配;也可以将信息加密隐藏于文本中, 达到标记的效果. 信息加密解密的思路是, 把字符串转成二进制0和1, 并用空格把字符隔开, 然后用三种零宽表示0、1、空格, 然...',
+        link: 'https://juejin.im/post/5e4b655de51d45271515563a',
+      },
+      {
+        title: 'JavaScript隐式类型转换(详解 +,-,*,/,==)',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: 'JavaScript 在 运算 或 比较 等操作之前, 会自动调用 浏览器内核中的类型转换方法 进行转换, 被称为隐式转换. 1. JAVASCRIPT内核中的类型转换 1.1 TOPRIMITIVE 输入类型结果1.1.1 对象内部方法 [[DEFAULTVALUE]] (HINT) 当用 St...',
+        link: 'https://juejin.im/post/5e245780e51d451c7d2a64a1',
+      },
+      {
+        title: '[组件封装]微信小程序-底部弹框',
+        avatar: './img/WechatIMG11.jpeg',
+        desc: '模仿ios浏览器底部弹框效果。遮罩层淡入淡出，弹框高度根据内容自适应。',
+        link: 'https://juejin.im/post/5e4cd4b05188254939133515',
+      },
+    ]
+
+    var articleDomStr = articleList.map(item => {
+      return '<a target="_black" href="' + item.link + '">'
+        + '<li class="media mb-4">'
+        + '<img src = "' + item.avatar + '" class="mr-3 listImg" alt="..." >'
+        + '<div class="media-body">'
+        + '<h5 class="mt-0 mb-1">' + item.title + '</h5>'
+        + item.desc
+        + '</div>'
+        + '</li>'
+        + '</a>'
+    }).join('');
+
+    $('#nav-article').html(articleDomStr)
+  </script>
+
+  <!-- 个人项目 -->
+  <script>
+    $(function () {
+      $('.example-popover').popover({
+        container: 'body'
+      })
+    })
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+    var projectList = [
+      {
+        title: '个人项目部署系统',
+        subTitle: 'deployment',
+        desc: 'node + express 搭建部署平台, 部署whosmeya其他项目',
+        projectLink: 'https://deployment.whosmeya.com/login',
+        githubLink: 'https://github.com/whosMeya/deployment',
+      },
+      {
+        title: '聊天室',
+        subTitle: 'chat',
+        desc: '原生socket写一个简单聊天室',
+        projectLink: 'http://chat.whosmeya.com/',
+        githubLink: 'https://github.com/whosMeya/chat',
+      },
+      {
+        title: 'nodejs社区-vue版',
+        subTitle: 'vue-cnode',
+        desc: 'vue开发cnode平台',
+        projectLink: 'http://cnode.vue.whosmeya.com/',
+        githubLink: 'https://github.com/whosMeya/vue-cnode',
+      },
+      {
+        title: 'nodejs社区-angular版',
+        subTitle: 'angular-cnode',
+        desc: 'vue开发cnode平台',
+        projectLink: 'http://cnode.angular.whosmeya.com/',
+        githubLink: 'https://github.com/whosMeya/angular-cnode',
+      },
+      {
+        title: '微信小程序',
+        subTitle: 'mini',
+        desc: '记录开发中封装的组件。',
+        type: 'mini',
+        projectLink: './img/mini-scan.jpg',
+        githubLink: 'https://github.com/whosMeya/angular-cnode',
+      },
+      {},
+    ];
+
+    var str = '';
+    projectList.forEach((item, index) => {
+      if (index === 0) {
+        str += '<div class="card-deck">';
+      } else if (index % 3 === 0) {
+        str += '</div>';
+        str += '<div class="mb-4"></div>';
+        str += '<div class="card-deck">';
+      }
+
+      if (item.title) {
+        str += '<div class="card">'
+          + '<div class="card-body">'
+          + '<h5 class="card-title">' + item.title + '</h5>'
+          + '<h6 class="card-subtitle mb-2 text-muted">' + item.subTitle + '</h6>'
+          + '<p class="card-text">' + item.desc + '</p>'
+
+        if (item.type === 'mini') {
+          str += '<a href="#" class="card-link" data-toggle="modal" data-target="#exampleModal">查看二维码</a>'
+        } else {
+          str += '<a href="' + item.projectLink + '" class="card-link">查看</a>'
+        }
+
+        str += '<a href="' + item.githubLink + '" class="card-link">GitHub地址</a>'
+          + '</div>'
+          + '</div>';
+      } else {
+        str += '<div class="card"></div>'
+      }
+
+
+      if (index === projectList.length - 1) {
+        str += '</div>';
+      }
+    })
+    $('#nav-project').html(str);
+  </script>
 </body>
 
 </html>
