@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>事件捕获、事件冒泡和事件委托</title>
+  <style>
+    div {
+      display: inline-block;
+      color: #fff;
+      margin: 30px;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <p>打开控制台查看打印效果</p>
+  <h1>事件捕获、事件冒泡</h1>
+  <p>点击下列div</p>
+  <div id="div3" style="background: #00f;">
+    div3
+    <div id="div2" style="background: #f0f;">
+      div2
+      <div id="div1" style="width: 100px; height: 100px; background: #f00;">div1</div>
+    </div>
+  </div>
+  <h1>事件委托</h1>
+  <p>事件委托利用了事件冒泡, 只指定一个事件处理程序，就可以管理某一类型的所有事件.</p>
+  <p>点击下列li</p>
+  <ul id="oul">
+    <li id="a">aaaaa</li>
+    <li id="b">bbbbb</li>
+    <li id="c">ccccc</li>
+  </ul>
+
+  <script>
+    // addEventListener 第三个参数默认false在冒泡阶段执行
+    div3.addEventListener('click', function (e) {
+      console.log('目标点击元素：' + e.target.tagName + e.target.id + '，目标元素不区分捕获和冒泡，按注册顺序执行。')
+      console.log('捕获阶段 div3')
+    }, true)
+    div3.addEventListener('click', function () {
+      console.log('冒泡阶段 div3')
+    }, false)
+    div1.addEventListener('click', function () {
+      console.log('捕获阶段 div1')
+    }, true)
+    div1.addEventListener('click', function () {
+      console.log('冒泡阶段 div1')
+    }, false)
+    div2.addEventListener('click', function () {
+      console.log('冒泡阶段 div2')
+    }, false)
+    div2.addEventListener('click', function () {
+      console.log('捕获阶段 div2')
+    }, true)
+
+
+    // 事件委托
+    oul.onclick = function (e) {
+      switch (e.target.id) {
+        case 'a':
+          alert('This is a');
+          break;
+        case 'b':
+          alert('This is b');
+          break;
+        case 'c':
+          alert('This is c');
+          break;
+      }
+    }
+  </script>
+</body>
+
+</html>
