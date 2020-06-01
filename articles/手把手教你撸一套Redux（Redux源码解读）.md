@@ -4,10 +4,10 @@ Redux 版本：3.7.2
 
 > Redux 是 JavaScript 状态容器，提供可预测化的状态管理。
 
-说白了Redux就是一个数据存储工具，所以数据基础模型有get方法，set方法以及数据改变后通知的对象subscribe订阅者。
+说白了Redux就是声明了一个对象，提供了这个对象的读取，修改，订阅等方法。
 
-* getState： getter（取）
-* dispatch： setter（存）
+* getState： getter（读取）
+* dispatch： setter（修改）
 * subscribe： 订阅
 
 Redux 提供了五个方法
