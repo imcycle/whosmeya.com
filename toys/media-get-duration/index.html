@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>获取音频/视频时长</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -14,15 +16,15 @@
   <h3>视频：</h3>
   <input id="vi" type="file" accept="video/*" />
 
+  <p>结果：IOS微信不生效</p>
   <script>
     var getDuration = function (e) {
       var url = URL.createObjectURL(e.target.files[0]);
       var audio = new Audio(url);
       audio.addEventListener('loadedmetadata', function () {
-        alert(audio.duration)
+        setTimeout(function () { alert('loadedmetadata: ' + audio.duration) }, 1000); // IOS微信input选择完成直接弹框无效，需要延迟
       })
     }
-
 
     document.getElementById('au').onchange = getDuration;
     document.getElementById('vi').onchange = getDuration;
