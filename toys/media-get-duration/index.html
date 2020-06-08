@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>获取音频/视频时长</title>
+</head>
+
+<body>
+  <h3>音频：</h3>
+  <input id="au" type="file" accept="audio/*" />
+
+  <h3>视频：</h3>
+  <input id="vi" type="file" accept="video/*" />
+
+  <script>
+    var getDuration = function (e) {
+      var url = URL.createObjectURL(e.target.files[0]);
+      var audio = new Audio(url);
+      audio.addEventListener('loadedmetadata', function () {
+        alert(audio.duration)
+      })
+    }
+
+
+    document.getElementById('au').onchange = getDuration;
+    document.getElementById('vi').onchange = getDuration;
+  </script>
+</body>
+
+</html>
