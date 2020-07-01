@@ -1,6 +1,8 @@
-# React源码之组件与挂载
+# React源码之组件的实现与首次渲染
 
-React: v15.0.0
+react: v15.0.0
+
+本文讲 组件如何编译 以及 ReactDOM.render 的渲染过程。
 
 <br />
 
@@ -16,15 +18,53 @@ babel 将 React JSX 编译成 JavaScript.
 
 <br />
 
-## React.createElement 生成 ReactElement
+## 源码中的两种数据结构
 
-ReactElement 是一个类型，它的结构是 { type, props, key, ... }.
+贯穿源码，常见的两种数据结构，有助于快速阅读源码。
 
-ReactDOM.render 方法的第一个参数，也就是我们根组件 App 编译后就是这种类型。
+### ReactElement
 
-<img style="width: 900px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701151748102-493150869.png" />
+<img style="width: 700px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701223118807-1667124983.png" />
 
-### React.createElement
+结构如下：
+
+```js
+{
+  $$typeof  // ReactElement标识符
+  type      // 组件
+  key
+  ref
+  props     // 组件属性和children
+}
+```
+
+是 React.createElement 的返回值。
+
+### ReactComponent
+
+ReactComponent 这个名字有点奇怪。
+
+<img style="width: 550px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701225856992-909218791.png" />
+
+结构如下：
+
+```js
+{
+  _currentElement    // ReactElement
+  ...
+
+  // 原型链上的方法
+  mountComponent,    // 组件初次加载调用
+  updateComponent,   // 组件更新调用
+  unmountComponent,  // 组件卸载调用
+}
+```
+
+是 ReactCompositeComponent 的 instance 类型。其余三种构造函数 ReactDOMComponent、ReactDOMTextComponent、ReactEmptyComponent 的实例结构与其相似。
+
+<br />
+
+## React.createElement
 
 React.createElement 实际执行的是 ReactElement.createElement。
 
@@ -36,11 +76,11 @@ ReactElement.createElement 接收三个参数：
 
 重点关注 type 和 props。
 
-<img style="width: 900px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701112819125-1454911396.png" />
+<img style="width: 750px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701112819125-1454911396.png" />
 
-然后看 ReactElement，只是做了赋值动作。
+然后看 ReactElement 方法，只是做了赋值动作。
 
-<img style="width: 900px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701113450513-1728092157.png" />
+<img style="width: 600px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701113450513-1728092157.png" />
 
 综上，我们写的代码编译后是这样的：
 
@@ -92,17 +132,17 @@ ReactDOM.render(
 
 <br />
 
-## ReactDOM.render 渲染 ReactElement
+## ReactDOM.render
 
-先来看下 ReactDOM.render 的流程
+先来看下 ReactDOM.render 源码的执行过程
 
 <img style="width: 600px;" src="https://img2020.cnblogs.com/blog/1141466/202007/1141466-20200701165005557-100283254.png" />
 
 <br />
 
-### instantiateReactComponent 生成 ReactComponent
+### instantiateReactComponent
 
-在 _renderNewRootComponent 方法中，调用了 instantiateReactComponent，生成了 ReactComponent 类型的数据，这是 React 中的第二个类型。
+在 _renderNewRootComponent 方法中，调用了 instantiateReactComponent，生成了的实例结构类似于 ReactComponent。
 
 instantiateReactComponent 的参数是 node，node 的其中一种格式就是 ReactElement。
 
@@ -146,7 +186,7 @@ instance.__proto__ = {
 }
 ```
 
-四种 mountComponent 大概如下
+四种 mountComponent 简化如下
 
 #### ReactCompositeComponent
 
@@ -207,9 +247,9 @@ mountComponent: function () {
 
 <br />
 
-### ReactDOM.render 简化版
+### ReactDOM.render 简化
 
-ReactDOM.render 简化后如下：
+简化如下：
 
 ```js
 ReactDOM.render = function (nextElement, container) {
@@ -235,7 +275,17 @@ ReactDOM.render = function (nextElement, container) {
 
 ## 总结
 
-源码中有两个重要的数据结构
+1. babel 将 JSX 语法编译成 React.createElement 形式。
+2. 源码中用到了两个重要的数据结构
+    * ReactElement
+    * ReactComponent
+3. React.createElement 将我们写的组件处理成 ReactElement 结构。
+4. ReactDOM.render 传入 ReactElement 和 container, 渲染流程如下
+    * 在 ReactElement 外套一层，生成新的 ReactElement
+    * 实例化 ReactElement：var instance = instantiateReactComponent(ReactElement)
+    * 递归生成 markup：var markup = instance.mountComponent()
+    * 将 markup 插入 container：container.innerHTML = markup
 
-* ReactElement
-* ReactComponent
+<br />
+
+[whosmeya.com](https://www.whosmeya.com/)
