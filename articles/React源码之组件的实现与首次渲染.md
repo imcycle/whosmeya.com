@@ -68,7 +68,7 @@ ReactComponent 这个名字有点奇怪。
 
 React.createElement 实际执行的是 ReactElement.createElement。
 
-ReactElement.createElement 接收三个参数：
+ReactElement.createElement 接收三个参数， 返回 ReactElement 结构。
 
 * type: string | Component
 * config: 标签上的属性
@@ -214,8 +214,10 @@ react 源码中，插入 container 前使用 ownerDocument、DOMLazyTree 创建�
 mountComponent: function () {
   var { type, props } = this._currentElement;
 
+  // 创建dom 源码中使用 ownerDocument
   var element = document.createElement(type);
 
+  // 递归children （源码中使用 DOMLazyTree 存放 并返回）
   if (props.children) {
     var childrenMarkups = props.children.map(function (node) {
       var instance = instantiateReactComponent(node);
@@ -253,6 +255,7 @@ mountComponent: function () {
 
 ```js
 ReactDOM.render = function (nextElement, container) {
+  // 添加壳子
   var nextWrappedElement = ReactElement(
     TopLevelWrapper,
     null,
@@ -263,10 +266,13 @@ ReactDOM.render = function (nextElement, container) {
     nextElement
   );
 
+  // 实例化 ReactElement
   var componentInstance = instantiateReactComponent(nextElement);
 
+  // 递归生成html
   var markup = componentInstance.mountComponent;
 
+  // 插入真实dom
   container.innerHTML = markup;
 }
 ```
