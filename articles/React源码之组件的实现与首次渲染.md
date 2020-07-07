@@ -66,7 +66,7 @@ ReactComponent 这个名字有点奇怪。
 
 ## React.createElement
 
-React.createElement 实际执行的是 ReactElement.createElement。
+React.createElement 实际执行的是 ReactElement.createElement（目录：<code>src/isomorphic/classic/element/ReactElement.js</code>）。
 
 ReactElement.createElement 接收三个参数， 返回 ReactElement 结构。
 
@@ -142,7 +142,7 @@ ReactDOM.render(
 
 ### instantiateReactComponent
 
-在 _renderNewRootComponent 方法中，调用了 instantiateReactComponent，生成了的实例结构类似于 ReactComponent。
+在 _renderNewRootComponent 方法中，调用了 instantiateReactComponent（目录：<code>src/renderers/shared/reconciler/instantiateReactComponent.js</code>），生成了的实例结构类似于 ReactComponent。
 
 instantiateReactComponent 的参数是 node，node 的其中一种格式就是 ReactElement。
 
@@ -190,6 +190,8 @@ instance.__proto__ = {
 
 #### ReactCompositeComponent
 
+源码目录：<code>src/renderers/shared/reconciler/ReactCompositeComponent.js</code>。
+
 ```js
 mountComponent: function () {
   // 创建当前组件的实例
@@ -207,6 +209,8 @@ mountComponent: function () {
 ```
 
 #### ReactDOMComponent
+
+源码目录：<code>src/renderers/dom/shared/ReactDOMComponent.js</code>。
 
 react 源码中，插入 container 前使用 ownerDocument、DOMLazyTree 创建和存放节点，此处为了方便理解，使用 document.createElement 模拟。
 
@@ -233,6 +237,8 @@ mountComponent: function () {
 
 #### ReactDOMTextComponent
 
+源码目录：<code>src/renderers/dom/shared/ReactDOMTextComponent.js</code>。
+
 ```js
 mountComponent: function () {
   return this._currentElement;
@@ -240,6 +246,8 @@ mountComponent: function () {
 ```
 
 #### ReactEmptyComponent
+
+源码目录：<code>src/renderers/shared/reconciler/ReactEmptyComponent.js</code>。
 
 ```js
 mountComponent: function () {
