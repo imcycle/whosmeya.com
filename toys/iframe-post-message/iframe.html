@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iframe</title>
+</head>
+
+<body>
+  iframe.html
+</body>
+<script>
+  window.onload = function () {
+    // 监听消息
+    window.addEventListener('message', function (data) {
+      console.log(data.data)
+    }, false);
+
+    // 给父页面发送消息
+    window.parent.postMessage({ message: '子页面发来的消息' }, '*')
+
+  }
+</script>
+
+</html>
