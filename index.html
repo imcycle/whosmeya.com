@@ -133,6 +133,11 @@
               沪公网安备 31011002004530号
             </p>
           </a>
+          <a target="_blank" href="http://beian.miit.gov.cn/" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">
+              豫ICP备19024432号-1
+            </p>
+          </a>
         </div>
       </div>
     </div>
@@ -266,7 +271,8 @@
     ]
 
     var articleDomStr = articleList.map(item => {
-      return '<a target="_black" href="' + item.link + '">'
+      // return '<a target="_black" href="' + item.link + '">'
+      return '<a target="_black" >'
         + '<li class="media mb-4">'
         + '<img src = "' + item.avatar + '" class="mr-3 listImg" alt="..." >'
         + '<div class="media-body">'
